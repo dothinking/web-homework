@@ -1,0 +1,31 @@
+FROM ubuntu
+
+# update apt source
+RUN echo deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse > /etc/apt/sources.list && \
+    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse >> /etc/apt/sources.list && \
+    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse >> /etc/apt/sources.list
+
+# install wget, java
+RUN apt update && apt install -qy --no-install-recommends \
+  wget \
+  default-jdk
+
+# download and unzip Flume
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz && \
+  tar zxvf apache-flume-1.9.0-bin.tar.gz -C /opt && \
+  mv /opt/apache-flume-1.9.0-bin /opt/flume
+
+# set environment variables
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH /opt/flume/bin:$PATH
+
+EXPOSE 44444
+EXPOSE 55555
+
+ENTRYPOINT ["/opt/flume/bin/flume-ng", "agent", "--conf", "/opt/flume/conf", "-conf-file", "/opt/flume/conf/usr/flume.conf", "--name", "a1"]

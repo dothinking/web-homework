@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  flume3:
+    image: flume:1.9.0
+    container_name: flume-3
+    volumes:
+      - ./flume-3:/opt/flume/conf/usr
+    command: -Dflume.root.logger=INFO,console
+
+  flume2:
+    image: flume:1.9.0
+    container_name: flume-2
+    ports:
+      - "44442:44444"
+      - "55552:55555"
+    depends_on:
+      - flume3
+    links:
+      - flume3
+    volumes:
+      - ./flume-2:/opt/flume/conf/usr
+
+  flume1:
+    image: flume:1.9.0
+    container_name: flume-1
+    ports:
+      - "44441:44444"
+      - "55551:55555"
+    depends_on:
+      - flume3
+    links:
+      - flume3
+    volumes:
+      - ./flume-1:/opt/flume/conf/usr
+      - ./tmp:/tmp
