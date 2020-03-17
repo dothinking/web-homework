@@ -6,7 +6,7 @@
 
 ![flume architecture](http://flume.apache.org/_images/DevGuide_image00.png)
 
-*source from [1]*
+*source from [[1]](#1)*
 
 
 ## Installation
@@ -36,7 +36,7 @@ flume-ng agent  --conf path/to/conf-folder \
                 --name agent-name-defined in conf-file.conf
 ```
 
-## Single Agent Sample [2]
+## Single Agent Sample [[2]](#2)
 
 ### 1. 准备配置文件
 
@@ -91,7 +91,8 @@ Event: { headers:{} body: 48 65 6C 6C 6F 20 46 6C 75 6D 65 0D             Hello 
 
 
 
-## Dockerfile [3,4]
+## Dockerfile [[3](#3), [4](#4)]
+
 
 将以上过程写成`dockfile`，以便后续以容器的方式进行多节点`Flume`测试。配置参数：
 
@@ -138,7 +139,7 @@ ENTRYPOINT ["/opt/flume/bin/flume-ng", "agent", "--conf", "/opt/flume/conf", "-c
 
 ---
 
-- [1] [Apache Flume](http://flume.apache.org/)
-- [2] [Flume 1.9.0 User Guide](http://flume.apache.org/releases/content/1.9.0/FlumeUserGuide.html)
-- [3] [Docker容器中运行flume](https://blog.csdn.net/redstarofsleep/article/details/79756740)
-- [4] [基于 Docker 构建 Flume](https://segmentfault.com/a/1190000000504942)
+-  [Apache Flume](http://flume.apache.org/)<span id='1'></span>
+- [Flume 1.9.0 User Guide](http://flume.apache.org/releases/content/1.9.0/FlumeUserGuide.html)<span id='2'></span>
+- [Docker容器中运行flume](https://blog.csdn.net/redstarofsleep/article/details/79756740)<span id='3'></span>
+- [基于 Docker 构建 Flume](https://segmentfault.com/a/1190000000504942)<span id='4'></span>
