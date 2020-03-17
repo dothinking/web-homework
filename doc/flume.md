@@ -32,8 +32,8 @@ export JAVA_HOME
 ```bash
 # run a Flume agent
 flume-ng agent  --conf path/to/conf-folder \
-				--conf-file path/to/conf-file.conf \
-				--name agent-name-defined in conf-file.conf
+                --conf-file path/to/conf-file.conf \
+                --name agent-name-defined in conf-file.conf
 ```
 
 ## Single Agent Sample [2]
