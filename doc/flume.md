@@ -138,7 +138,7 @@ ENTRYPOINT ["/opt/flume/bin/flume-ng", "agent", "--conf", "/opt/flume/conf", "-c
 
 ---
 
-[1] [Apache Flume](http://flume.apache.org/)
-[2] [Flume 1.9.0 User Guide](http://flume.apache.org/releases/content/1.9.0/FlumeUserGuide.html)
-[3] [Docker容器中运行flume](https://blog.csdn.net/redstarofsleep/article/details/79756740)
-[4] [基于 Docker 构建 Flume](https://segmentfault.com/a/1190000000504942)
+- [1] [Apache Flume](http://flume.apache.org/)
+- [2] [Flume 1.9.0 User Guide](http://flume.apache.org/releases/content/1.9.0/FlumeUserGuide.html)
+- [3] [Docker容器中运行flume](https://blog.csdn.net/redstarofsleep/article/details/79756740)
+- [4] [基于 Docker 构建 Flume](https://segmentfault.com/a/1190000000504942)
