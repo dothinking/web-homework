@@ -2,14 +2,14 @@
 分布式、高可用数据采集中间件。
 
 
-## Architecture
+## 1. Architecture
 
 ![flume architecture](http://flume.apache.org/_images/DevGuide_image00.png)
 
 *source from [[1]](#1)*
 
 
-## Installation
+## 2. Installation
 
 ```bash
 # install jdk
@@ -27,7 +27,7 @@ PATH=$PATH:$JAVA_HOME/bin:/opt/flume/bin
 export JAVA_HOME
 ```
 
-## Launch
+## 3. Launch
 
 ```bash
 # run a Flume agent
@@ -36,9 +36,9 @@ flume-ng agent  --conf path/to/conf-folder \
                 --name agent-name-defined in conf-file.conf
 ```
 
-## Single Agent Sample [[2]](#2)
+## 4. Hello World [[2]](#2)
 
-### 1. 准备配置文件
+### 4.1 准备配置文件
 
 ```bash
 # example.conf: A single-node Flume configuration
@@ -64,13 +64,13 @@ a1.sinks.k1.type = logger
 a1.sinks.k1.channel = c1
 ```
 
-### 2. 启动`Flume`
+### 4.2 启动`Flume`
 
 ```bash
 /opt/flume/conf# flume-ng agent --conf . --conf-file example.conf --name a1 -Dflume.root.logger=INFO,console
 ```
 
-### 3. 测试
+### 4.3 测试
 
 启动新的控制台进行测试：输入Hello Flume，回车后得到OK
 
@@ -91,7 +91,7 @@ Event: { headers:{} body: 48 65 6C 6C 6F 20 46 6C 75 6D 65 0D             Hello 
 
 
 
-## Dockerfile [[3](#3), [4](#4)]
+## 5. Dockerfile [[3](#3), [4](#4)]
 
 
 将以上过程写成`dockfile`，以便后续以容器的方式进行多节点`Flume`测试。配置参数：

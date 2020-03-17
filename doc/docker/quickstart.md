@@ -1,6 +1,6 @@
 Docker is a platform for developers and sysadmins to build, run, and share applications with containers.
 
-## Architecture
+## 1. Architecture
 
 ![docker architecture](https://docs.docker.com/engine/images/architecture.svg)
 
@@ -10,7 +10,7 @@ Docker is a platform for developers and sysadmins to build, run, and share appli
 - `Container`：镜像运行时的实体
 - `Repository`：镜像存储中心
 
-## Installation
+## 2. Installation
 
 - Linux系统以`Ubuntu`为例，参考步骤[[2]](#2)；使用国内镜像加速安装参考[[3]](#3)
 - Windows系统下载安装`Docker for Windows`
@@ -62,10 +62,38 @@ Docker for Windows设置`Docker Engine`：
 }
 ```
 
-## 主要命令
+## 3. Hello World
 
-- `docker image ...` [[6]](#6)
-- `docker container ...` [[7]](#7)
+```bash
+$ docker container run hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+1b930d010525: Pull complete
+Digest: sha256:f9dfddf63636d84ef479d645ab5885156ae030f611a56f3a7ac7f2fdd86d7e4e
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+...
+```
+
+查看已经安装的镜像
+
+```bash
+$ docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+hello-world         latest              fce289e99eb9        14 months ago       1.84kB
+```
+
+查看已经启动的容器
+
+```bash
+$ docker container ls -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                     PORTS               NAMES
+35fa36bd1b78        hello-world         "/hello"            2 hours ago         Exited (0) 5 minutes ago                       romantic_archimedes
+```
+
+更多关于镜像和容器的操作参考[[6](#6), [7](#7)]
 
 
 

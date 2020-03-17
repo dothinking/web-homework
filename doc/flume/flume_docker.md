@@ -5,7 +5,7 @@
 - flume-3接收flume-1、flume-2数据并打印到控制台
 
 
-## 创建镜像
+## 1. 创建镜像
 
 利用[前文](quickstart.md)的`dockfile`构建镜像`flume:1.9.0`：
 
@@ -13,11 +13,11 @@
 docker build . -t flume:1.9.0
 ```
 
-## 准备配置文件
+## 2. 准备配置文件
 
 在宿主机器上分别准备三个节点的配置文件。
 
-### 1. 监控文件
+### 2.1 监控文件
 
 - 以`avro`方式输出，需要提供主机名和端口号
 - 主机名采用`flume-3` -> 启动容器时关联`--link flume-3`
@@ -46,7 +46,7 @@ a1.channels.c1.capacity = 1000
 a1.channels.c1.transactionCapacity = 100
 ```
 
-### 2. 监听端口
+### 2.2 监听端口
 
 - 以`avro`方式输出，需要提供主机名和端口号
 - 主机名采用`flume-3` -> 启动容器时关联`--link flume-3`
@@ -75,7 +75,7 @@ a1.channels.c1.capacity = 1000
 a1.channels.c1.transactionCapacity = 100
 ```
 
-### 3. 接收节点数据
+### 2.3 接收节点数据
 
 `flume-1`及`flume-2`输出端口都为`55555`，故此处`source`监听端口相应为`55555`。
 
@@ -101,7 +101,7 @@ a1.channels.c1.capacity = 1000
 a1.channels.c1.transactionCapacity = 100
 ```
 
-## 启动容器
+## 3. 启动容器
 
 首先启动`flume-3`：为便于直接观察结果，不以后台模式启动
 
@@ -132,7 +132,7 @@ docker run -d \
            flume:1.9.0
 ```
 
-## 测试结果
+## 4. 测试结果
 
 测试监控文件：在宿主机器上写入数据到被监控的文件`/path/to/workspace/tmp/test.log`
 
@@ -158,7 +158,7 @@ Event: { headers:{} body: 68 65 6C 6C 6F 20 77 6F 72 6C 64                hello 
 Event: { headers:{} body: 68 65 6C 6C 6F 20 66 6C 75 6D 65 0D             hello flume. }
 ```
 
-## docker-compose
+## 5. docker-compose
 
 将以上手动启动过程写为`docker-compose`文件：
 
