@@ -1,4 +1,4 @@
-在[Flume入门](flume.md)的基础上，利用`docker`练习分布式`Flume`。
+在[Flume入门](quickstart.md)的基础上，利用`docker`练习分布式`Flume`。
 
 - flume-1监控文件`/tmp/test.log`
 - flume-2监听指定端口的数据流
@@ -7,7 +7,7 @@
 
 ## 创建镜像
 
-利用[前文](flume.md)的`dockfile`构建镜像`flume:1.9.0`：
+利用[前文](quickstart.md)的`dockfile`构建镜像`flume:1.9.0`：
 
 ```bash
 docker build . -t flume:1.9.0
