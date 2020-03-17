@@ -158,6 +158,48 @@ Event: { headers:{} body: 68 65 6C 6C 6F 20 77 6F 72 6C 64                hello 
 Event: { headers:{} body: 68 65 6C 6C 6F 20 66 6C 75 6D 65 0D             hello flume. }
 ```
 
+## docker-compose
+
+将以上手动启动过程写为`docker-compose`文件：
+
+```yml
+version: '3'
+
+services:
+  flume3:
+    image: flume:1.9.0
+    container_name: flume-3
+    volumes:
+      - ./flume-3:/opt/flume/conf/usr
+    command: -Dflume.root.logger=INFO,console
+
+  flume2:
+    image: flume:1.9.0
+    container_name: flume-2
+    ports:
+      - "44442:44444"
+      - "55552:55555"
+    depends_on:
+      - flume3
+    links:
+      - flume3
+    volumes:
+      - ./flume-2:/opt/flume/conf/usr
+
+  flume1:
+    image: flume:1.9.0
+    container_name: flume-1
+    ports:
+      - "44441:44444"
+      - "55551:55555"
+    depends_on:
+      - flume3
+    links:
+      - flume3
+    volumes:
+      - ./flume-1:/opt/flume/conf/usr
+      - ./tmp:/tmp
+```
 
 
 ---
