@@ -18,7 +18,8 @@ apt install -y default-jdk
 # download and unzip Flume
 wget -qO apache-flume-1.9.0-bin.tar.gz https://mirrors.tuna.tsinghua.edu.cn/apache/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz
 
-tar zxvf apache-flume-1.9.0-bin.tar.gz -C /opt
+tar -xzf apache-flume-1.9.0-bin.tar.gz -C /opt
+rm -f apache-flume-1.9.0-bin.tar.gz
 mv /opt/apache-flume-1.9.0-bin /opt/flume
 
 # set up env. var
@@ -110,7 +111,7 @@ RUN apt install -qy --no-install-recommends default-jdk
 
 # download and unzip Flume
 RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz && \
-  tar zxvf apache-flume-1.9.0-bin.tar.gz -C /opt && \
+  tar -xzf apache-flume-1.9.0-bin.tar.gz -C /opt && \
   mv /opt/apache-flume-1.9.0-bin /opt/flume
 
 # set environment variables
