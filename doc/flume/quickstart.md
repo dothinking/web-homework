@@ -100,25 +100,13 @@ Event: { headers:{} body: 48 65 6C 6C 6F 20 46 6C 75 6D 65 0D             Hello 
 - sink监听端口：55555
 - 配置文件挂载目录：`/opt/flume/conf/usr`，其中配置文件名`flume.conf`
 
+> *使用[docker章节](../docker/dockerfile.md)创建的`ubuntu-base`作为基础镜像*
 
 ```bash
-FROM ubuntu
+FROM ubuntu-base
 
-# update apt source
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse > /etc/apt/sources.list && \
-    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-security main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-updates main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-proposed main restricted universe multiverse >> /etc/apt/sources.list && \
-    echo deb-src http://mirrors.aliyun.com/ubuntu/ bionic-backports main restricted universe multiverse >> /etc/apt/sources.list
-
-# install wget, java
-RUN apt update && apt install -qy --no-install-recommends \
-  wget \
-  default-jdk
+# install java
+RUN apt install -qy --no-install-recommends default-jdk
 
 # download and unzip Flume
 RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz && \

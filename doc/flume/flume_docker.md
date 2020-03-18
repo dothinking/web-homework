@@ -7,7 +7,7 @@
 
 ## 1. 创建镜像
 
-利用[前文](quickstart.md)的`dockfile`构建镜像`flume:1.9.0`：
+利用[`dockfile`](quickstart.md)构建镜像`flume:1.9.0`：
 
 ```bash
 docker build . -t flume:1.9.0
