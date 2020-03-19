@@ -14,3 +14,4 @@
 ## Kafka
 
 - [安装与启动](kafka/quickstart.md)
+- [集群实例](kafka/kafka_cluster.md)
