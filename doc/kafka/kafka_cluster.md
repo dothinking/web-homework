@@ -42,7 +42,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-> `KAFKA_ADVERTISED_HOST_NAME`为宿主机IP地址
+- `KAFKA_ADVERTISED_HOST_NAME`为宿主机IP地址
+- `kafka: ports: 9092`映射宿主机随机端口到容器内的`9092`。此处不宜指定端口，例如`9000:9092`，避免`scale`扩展时出现端口占用冲突。
 
 ### 1.2 扩展broker
 
@@ -177,7 +178,9 @@ $ kafka-preferred-replica-election.sh --zookeeper localhost:2181
 在宿主机上启动一个终端模拟生产数据
 
 ```bash
-$ kafka-console-producer.sh --broker-list localhost:32770 --topic partitioned-topics
+$ kafka-console-producer.sh \
+    --broker-list localhost:32768,localhost:32769,localhost:32770,localhost:32771 \
+    --topic partitioned-topics
 >A
 >B
 >C
