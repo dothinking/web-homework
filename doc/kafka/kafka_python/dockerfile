@@ -1,0 +1,9 @@
+FROM python:3.6-alpine
+
+# create project path
+WORKDIR /app
+
+# copy and install packages
+COPY requirements.txt .
+RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
+
