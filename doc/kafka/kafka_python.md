@@ -55,9 +55,7 @@ $ docker build -t python-kafka:3.6 .
 **新建`app_net`**
 
 ```bash
-# 后面多处用到，故保存为环境变量
-$ export APP_NET=app_net
-$ docker network build ${APP_NET}
+$ docker network build app_net
 ```
 
 **分配给`Kafka`容器**
@@ -71,7 +69,7 @@ services:
     ports:
       - "2181:2181"
     networks:
-      - ${APP_NET}
+      - app_net
 
   kafka:
     image: wurstmeister/kafka
@@ -85,27 +83,25 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - ${APP_NET}
+      - app_net
 
 networks:
-  ${APP_NET}:
+  app_net:
     external: true
 ```
 
 **共享给`Python`容器**
 
 ```bash
-$ name=python-kafka
+$ docker run -itd  --name python-kafka -v $(pwd):/app python-kafka:3.6
 
-$ docker run -itd  --name ${name} -v $(pwd):/app python-kafka:3.6
-
-$ docker network connect ${APP_NET} ${name}
+$ docker network connect app_net python-kafka
 ```
 
 最后即可进入`Python`容器写代码
 
 ```bash
-$ docker exec -it ${name} /bin/sh
+$ docker exec -it python-kafka /bin/sh
 ```
 
 ### 1.3 流程自动化
