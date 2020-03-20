@@ -165,7 +165,7 @@ Event: { headers:{} body: 68 65 6C 6C 6F 20 66 6C 75 6D 65 0D             hello 
 - `docker run`使用`--link`参数来关联容器`flume-1`、`flume-2`与`flume-3`之间的通信，同理可以使用`docker-compose`的`links`关键字实现相同的效果
 - 新版`docker-compose`推荐使用`networks`来管理容器间通信，同一`yml`配置文件中的容器默认共享网络，所以可以直接相互访问 [[2]](#2)
 
-> 更多关于`docker-compose`网络设置的案例参考[[3](#3), [4](#4)]
+> 更多关于`docker-compose`网络设置的案例，例如链接定义在不同`docker-compose.yml`中的容器，参考[[3](#3), [4](#4)]
 
 
 ```yml
