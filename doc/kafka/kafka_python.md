@@ -123,7 +123,6 @@ fi
 
 # kafka
 echo "starting kafka..."
-export APP_NET
 docker-compose up -d
 
 # kafka-python
