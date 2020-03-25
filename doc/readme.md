@@ -17,11 +17,12 @@
 - [x] [主题分区、副本实例](kafka/kafka_basic.md)
 - [x] [集群实例](kafka/kafka_cluster.md)
 - [x] [kafka-python](kafka/kafka_python.md)
+- [ ] [kafka-mongoDB]()
 
 ## MongoDB
 
-- [ ] [安装与配置]()
-- [ ] [消费Kafka数据]()
+- [x] [安装与配置](mongodb/quickstart.md)
+- [ ] [Python与MongoDB]()
 
 
 ## Nginx
