@@ -19,8 +19,11 @@ COPY sources.list /etc/apt/sources.list
 
 # install wget, vim
 RUN apt update && apt install -qy --no-install-recommends \
-  wget \
-  vim
+  wget  vim \
+  # clean to reduce the image size
+  && apt-get clean \
+  && apt-get autoclean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 ```
 
 其中，`sources.list`内容如下：
