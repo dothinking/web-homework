@@ -1,18 +1,20 @@
-version: '3.7'
+version: '3'
+
 services:
   mongo:
     image: mongo:latest
     container_name: mongo
     environment:
         - MONGO_INITDB_ROOT_USERNAME=admin
-        - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+        - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
         - "37017:27017"
     volumes:
-        - "$PWD/data:/data/db"
-    secrets:
-        - db_root_password
+        - "$PWD/entrypoint:/docker-entrypoint-initdb.d"
+        - "data_db:/data/db"
 
-secrets:
-    db_root_password:
-        file: ./root_password.txt
+# incompatible file system between windows and mongo,
+# so have to use volume:
+# docker volume [prefix]_data_db will be created automatically
+volumes: 
+    data_db:
