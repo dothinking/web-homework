@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/db_root_password
+    ports:
+        - "37017:27017"
+    volumes:
+        - "$PWD/data:/data/db"
+    secrets:
+        - db_root_password
+
+secrets:
+    db_root_password:
+        file: ./root_password.txt

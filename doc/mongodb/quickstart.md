@@ -180,8 +180,8 @@ services:
   mongo:
     image: mongo:latest
     environment:
-        - MONGO_INITDB_ROOT_USERNAME=root
-        - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
       - "37017:27017"
     volumes:
@@ -194,10 +194,20 @@ services:
 ```bash
 #!/bin/bash
 echo "Creating mongo users..."
-mongo -u root -p rootPass << EOF
+mongo -u root -p root << EOF
 use first_db
 db.createUser({user: 'tom', pwd: 'goodboy', roles:[{role:'readWrite',db:'first_db'}]})
 EOF
+```
+
+上面挂载数据卷的做法在`Windows`上会导致`mongodb`启动失败，原因参考 [[8](#8)]：
+
+> Windows和OS X上的默认Docker设置使用VirtualBox VM来托管Docker守护程序。不幸的是，VirtualBox用于在主机系统和Docker容器之间共享文件夹的机制与MongoDB使用的内存映射文件不兼容（请参阅vbox bug，docs.mongodb.org和相关的jira.mongodb.org错误）。这意味着无法运行映射到主机的数据目录的MongoDB容器。
+
+解决方法为新建`docker`数据卷`volume`，然后挂载为数据持久化目录
+
+```bash
+$ docker volume create --name volume_name
 ```
 
 ---
@@ -209,3 +219,4 @@ EOF
 - [[5] Secure your MongoDB Deployment](https://docs.mongodb.com/guides/server/auth/)<span id='5'></span>
 - [[6] Enable Access Control](https://docs.mongodb.com/manual/tutorial/enable-authentication/)<span id='6'></span>
 - [[7] 基于 Docker 中的 MongoDB Auth 使用](https://www.jianshu.com/p/03bbfb8307df)<span id='7'></span>
+- [[8] 关于widows系统使用docker部署mongo时报错：Operation not permitted](https://blog.csdn.net/qq506930427/article/details/99658808)<span id='7'></span>
