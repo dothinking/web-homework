@@ -1,18 +1,21 @@
 # MongoDB
 
-- 基于分布式文件存储的数据库，为WEB应用提供可扩展的高性能数据存储解决方案。
+基于分布式文件存储的数据库，为WEB应用提供可扩展的高性能数据存储解决方案。
 
-- 介于关系数据库和非关系数据库`nosql`之间，非关系数据库当中功能最丰富，最像关系数据库的产品。
+![Databases and Collections](https://docs.mongodb.com/manual/_images/crud-annotated-collection.bakedsvg.svg)
+
+![Documents](https://docs.mongodb.com/manual/_images/crud-annotated-document.bakedsvg.svg)
+
 
 ## 1. 安装
 
-官网有详尽的安装文档，这里采用`docker`镜像安装当前最新版本
+官网有详尽的安装文档[[1](#1)]，这里采用`docker`镜像安装当前最新版本
 
 ```bash
 $ docker pull mongo
 ```
 
-参考`mongo`镜像的说明文档[[1]](#1)，几个关键参数：
+参考`mongo`镜像的说明文档[[2]](#2)，几个关键参数：
 
 - 配置文件路径`--config /etc/mongo/mongod.conf`
 - 脚本目录`/docker-entrypoint-initdb.d`下的`.sh`或`.js`文件会在容器第一次启动时被自动执行（多个文件则按文件名顺序执行）
@@ -20,10 +23,17 @@ $ docker pull mongo
 - 环境变量`MONGO_INITDB_ROOT_USERNAME`和` MONGO_INITDB_ROOT_PASSWORD`创建相应`root`权限用户，并开启用户认证
 - 环境变量`MONGO_INITDB_ROOT_USERNAME_FILE`和`MONGO_INITDB_ROOT_PASSWORD_FILE`以文件形式指定用户名和密码
 
+## 2 启动服务
 
-## 2. Hello World
+启动`mongoDB`服务，其中`--dbpath`指定数据库存储位置，默认端口`--port=27017`，更多配置选项参考 [[3](#3)]。
 
-启动容器
+```bash
+$ mongod --dbpath <path to data directory>
+```
+
+## 3. Hello World
+
+以后台进程模式启动容器，同时已经启动了`mongod`服务
 
 ```bash
 $ docker run -d --name my-mongo mongo:latest
@@ -54,25 +64,41 @@ Welcome to the MongoDB shell.
 >
 ```
 
-创建数据库并写入一条数据
+创建数据库`first_db`，显示当前所在数据库名称
 
 ```bash
-> use first
-switched to db first
+> use first_db
+switched to db first_db
 
-> db.first.insert({'msg': 'hello world'})
+> db
+first_db
+```
+
+当前数据库中没有数据，故不会显示在数据库列表中 
+
+```bash
+> show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+```
+
+向当前数据库的自定义集合`first_collection`写入一条数据/文档，此时数据库`first_db`被正真创建。
+
+```bash
+> db.first_collection.insert({'msg': 'hello world'})
 WriteResult({ "nInserted" : 1 })
 
 > show dbs
 admin   0.000GB
 config  0.000GB
-first   0.000GB
+first_db   0.000GB
 local   0.000GB
 ```
 
-更多`CRUD`操作参考官方文档 [[2]](#2)。
+更多`CRUD`操作参考官方文档 [[4]](#4)。
 
-## 3. 用户认证
+## 4. 开启用户认证
 
 `mongodb`默认无需验证即可操作数据库，这显然具有安全隐患。于是，新建一个容器，并强制开启权限验证`--auth`：
 
@@ -85,19 +111,19 @@ $ docker run -d --name my-mongo mongo:latest --auth
 $ docker exec -it my-mongo /bin/bash
 
 root@d3d2d1a0610c:/# mongo
-> use first
-switched to db first
+> use first_db
+switched to db first_db
 
-> db.first.insert({'msg': 'hello world'})
+> db.first_collection.insert({'msg': 'hello world'})
 WriteCommandError({
         "ok" : 0,
-        "errmsg" : "not authorized on first to execute command { ... }",
+        "errmsg" : "not authorized on first_db to execute command { ... }",
         "code" : 13,
         "codeName" : "Unauthorized"
 })
 ```
 
-`use first`时并没有真正创建数据库，所以可以顺利通过；`db.first.insert`时出现未授权错误，说明已经启用用户认证机制。
+`use first_db`时并没有真正创建数据库，所以可以顺利通过；`db.first_collection.insert`时出现未授权错误，说明已经启用用户认证机制。
 
 于是，切换到系统`admin`数据库，创建用户
 
@@ -108,7 +134,7 @@ switched to db admin
 > db.createUser({user:"root",pwd:"root",roles:[{role:'root',db:'admin'}]})
 ```
 
-**在开启鉴权且当前数据库没有用户的情况下，`mongodb`允许创建用户 [[3](#3), [4](#4)]**。
+**在开启鉴权且当前数据库没有用户的情况下，`mongodb`允许创建新用户 [[5](#5), [6](#6)]**。
 
 通过用户验证`db.auth`后（返回值`1`），成功执行数据库操作
 
@@ -116,14 +142,14 @@ switched to db admin
 > db.auth('root', 'root')
 1
 
-> use first
-switched to db first
+> use first_db
+switched to db first_db
 
-> db.first.insert({'msg': 'hello world'})
+> db.first_collection.insert({'msg': 'hello world'})
 WriteResult({ "nInserted" : 1 })
 ```
 
-也可以直接使用用户名/密码连接，登陆后可以正常进行数据库操作
+也可以直接使用用户名/密码连接，登陆后即可正常进行数据库操作
 
 ```bash
 $ mongo -u root -p root
@@ -140,9 +166,9 @@ docker run -d \
 ```
 
 
-## 4. `docker-compose`版本
+## 5. `docker-compose`版本
 
-综合以上实验，可以将容器的启动参数都写入`docker-compose.yml`[[5](#5)]
+综合以上实验，可以将容器的启动参数都写入`docker-compose.yml`[[7](#7)]
 
 - 挂载数据卷
 - 创建默认`root`账户
@@ -176,8 +202,10 @@ EOF
 
 ---
 
-- [[1] How to use this image](https://github.com/docker-library/docs/tree/master/mongo)<span id='1'></span>
-- [[2] MongoDB CRUD Operations](https://docs.mongodb.com/manual/crud/)<span id='2'></span>
-- [[3] mongod --auth](https://docs.mongodb.com/manual/reference/program/mongod/#cmdoption-mongod-auth)<span id='3'></span>
-- [[4] Enable Access Control](https://docs.mongodb.com/manual/tutorial/enable-authentication/)<span id='4'></span>
-- [[5] 基于 Docker 中的 MongoDB Auth 使用](https://www.jianshu.com/p/03bbfb8307df)<span id='5'></span>
+- [[1] Install MongoDB](https://docs.mongodb.com/guides/server/install/)<span id='1'></span>
+- [[2] How to use this image](https://github.com/docker-library/docs/tree/master/mongo)<span id='2'></span>
+- [[3] mongod](https://docs.mongodb.com/manual/reference/program/mongod/)<span id='3'></span>
+- [[4] MongoDB CRUD Operations](https://docs.mongodb.com/manual/crud/)<span id='4'></span>
+- [[5] Secure your MongoDB Deployment](https://docs.mongodb.com/guides/server/auth/)<span id='5'></span>
+- [[6] Enable Access Control](https://docs.mongodb.com/manual/tutorial/enable-authentication/)<span id='6'></span>
+- [[7] 基于 Docker 中的 MongoDB Auth 使用](https://www.jianshu.com/p/03bbfb8307df)<span id='7'></span>
