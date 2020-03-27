@@ -22,7 +22,7 @@
 ## MongoDB
 
 - [x] [安装与配置](mongodb/quickstart.md)
-- [ ] [Python与MongoDB]()
+- [x] [Python与MongoDB](mongodb/pymongo.md)
 
 
 ## Nginx
