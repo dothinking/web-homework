@@ -10,7 +10,7 @@ services:
     ports:
         - "37017:27017"
     volumes:
-        - "$PWD/entrypoint:/docker-entrypoint-initdb.d"
+        - ".:/docker-entrypoint-initdb.d"
         - "data_db:/data/db"
 
 # incompatible file system between windows and mongo,
