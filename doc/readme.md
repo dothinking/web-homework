@@ -9,6 +9,7 @@
 
 - [x] [安装与启动](flume/quickstart.md)
 - [x] [多节点连接实例](flume/flume_docker.md)
+- [ ] [Flume拦截器与过滤器]()
 - [x] [Flume-Kafka连接实例](flume/flume_kafka.md)
 
 ## Kafka
@@ -16,8 +17,9 @@
 - [x] [安装与启动](kafka/quickstart.md)
 - [x] [主题分区、副本实例](kafka/kafka_basic.md)
 - [x] [集群实例](kafka/kafka_cluster.md)
-- [x] [kafka-python](kafka/kafka_python.md)
-- [ ] [kafka-mongoDB]()
+- [x] [kafka-python消费数据](kafka/kafka_python.md)
+- [ ] [Kafka Connect](kafka/kafka_connect.md)
+- [ ] [kafka-mongoDB](kafka/kafka_mongo.md)
 
 ## MongoDB
 
