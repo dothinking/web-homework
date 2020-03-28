@@ -1,4 +1,6 @@
-Docker is a platform for developers and sysadmins to build, run, and share applications with containers.
+# Docker
+
+`Docker` is a platform for developers and sysadmins to **build, run, and share applications with containers**.
 
 ## 1. Architecture
 

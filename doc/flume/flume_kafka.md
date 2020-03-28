@@ -1,3 +1,5 @@
+# Flume-Kafka连接实例
+
 在实践了`Kafka`的[基本操作](../kafka/quickstart.md)、[集群配置](../kafka/kafka_cluster.md)后，练习`Flume`与`Kafka`的集成 [[1]](#1)：
 
 - `Flume`监听`netcat`数据

@@ -1,3 +1,5 @@
+# Kafka集群实践
+
 [前文](kafka_basic.md)实践了用`docker-compose scale`便捷地扩展`kafka`容器数量，但是容器名和对外端口号都是自动生成的，无法自主控制。这一篇练习在`docker-compose`的控制文件中显式配置`Kafka`节点信息，侧重点在**端口号的设置**。
 
 `docker-compose.yml`主体结构[参考](kafka_basic/docker-compose.yml)，下面以配置两个`Broker`节点为例。

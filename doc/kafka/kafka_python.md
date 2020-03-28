@@ -1,3 +1,5 @@
+# kafka-python消费数据
+
 之前的练习中，消息的生产和消费都是基于`Kafka`自带的控制台命令，这一篇将使用`Python`客户端消费`kafka`数据。`Kafka`官方没有提供`Python`客户端，但推荐了一些选择[[1]](#1)，这里采用的是`kafka-python`[[2]](#2)：
 
 - python 3.6
