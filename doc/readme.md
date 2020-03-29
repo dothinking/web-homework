@@ -18,7 +18,7 @@
 - [x] [集群实例](kafka/kafka_cluster.md)
 - [x] [kafka-python消费数据](kafka/kafka_python.md)
 - [x] [Kafka Connect](kafka/kafka_connect.md)
-- [ ] [MongoDB Connector for Apache Kafka](kafka/kafka_mongo.md)
+- [x] [MongoDB Connector for Apache Kafka](kafka/kafka_mongo.md)
 
 ## MongoDB
 

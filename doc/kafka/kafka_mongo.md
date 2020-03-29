@@ -173,13 +173,13 @@ retries.defer.timeout=5000
 
 ## 4. 测试
 
-启动容器：
+启动容器
 
 ```bash
 $ docker-compose up -d
 ```
 
-写入测试数据：
+写入测试数据
 
 ```bash
 $ echo 'hello world' > ./data/test.txt
@@ -187,7 +187,7 @@ $ echo 'hello kafka' >> ./data/test.txt
 $ echo 'hello mongo-kafka connect' >> ./data/test.txt
 ```
 
-连接`MongoDB`观察结果：
+连接`MongoDB`观察结果
 
 ```json
 {
@@ -199,8 +199,11 @@ $ echo 'hello mongo-kafka connect' >> ./data/test.txt
 }
 ```
 
+关闭容器结束练习
 
-
+```bash
+$ docker-compose down
+```
 
 ---
 
