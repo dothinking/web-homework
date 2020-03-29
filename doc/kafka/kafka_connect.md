@@ -89,9 +89,9 @@ transforms.InsertSource.static.value=test-file-source
 - `connector.class=FileStreamSource`为内置文件类型的`source connect`，类似于`flume`中`source.type`
 - `file=/path/to/test.txt`被监控文件的路径（支持相对路径）
 - `topic`是推送到的主题
-- `transforms`部分为新增内容（可选），表示在原来消息的基础上作轻量化的在线修改。`Kafka`内置了一些修改，具体类型及其配置参数参考文档[[1](#1)]。
+- `transforms`部分为新增内容（可选），表示在原来消息的基础上作轻量化的在线修改。
 
-这里示例了两个`transforms`：
+`Kafka`内置了一些修改，具体类型及其配置参数参考文档[[1](#1), [7](#7)]。这里示例了两个`transforms`：
 
 - `org.apache.kafka.connect.transforms.HoistField`使用自定义值包装数据为`Struct/Map`类型，本例将原始数据`hello`修改为`{'line': 'hello'}`
 - `org.apache.kafka.connect.transforms.InsertField`插入自定义属性，本例将新增键值对`{'data_source': 'test-file-source'}`
@@ -168,7 +168,7 @@ $ cat test.sink.txt
 
 在试图使用`docker-compose`自动化上述流程时遇到问题：需要替换`wurstmeister/kafka`默认的启动命令`start-kafka.sh`，将其与`connect-standalone.sh`整合。
 
-后来参考[[7](#7)]发现正确的思路：将`Kafka`服务和`Kafaka Connect`看作独立的服务，分别在各自容器运行。这样既方便容器编排，逻辑上也更合理——一个负责消息队列，一个负责数据采集。
+后来参考[[8](#8)]发现正确的思路：将`Kafka`服务和`Kafaka Connect`看作独立的服务，分别在各自容器运行。这样既方便容器编排，逻辑上也更合理——一个负责消息队列，一个负责数据采集。
 
 于是，整合后的[`docker-compose.yml`](kafka_connect/docker-compose.yml)及相应[目录结构](./kafka_connect)：
 
@@ -238,4 +238,5 @@ exec "connect-standalone.sh" \
 - [[4] kafka connect 简单测试](https://blog.csdn.net/helihongzhizhuo/article/details/80335931)<span id='4'></span>
 - [[5] Kafka connect介绍、部署及开发](https://my.oschina.net/hnrpf/blog/1555915)<span id='5'></span>
 - [[6] Kafka Connect Deep Dive – Converters and Serialization Explained](https://www.confluent.io/blog/kafka-connect-deep-dive-converters-serialization-explained/)<span id='6'></span>
-- [[7] Kafka Connect - Crash Course](https://dev.to/thegroo/kafka-connect-crash-course-1chd)<span id='7'></span>
+- [[7] Kafka Connect Transformations](https://docs.confluent.io/current/connect/transforms/index.html)<span id='7'></span>
+- [[8] Kafka Connect - Crash Course](https://dev.to/thegroo/kafka-connect-crash-course-1chd)<span id='8'></span>
