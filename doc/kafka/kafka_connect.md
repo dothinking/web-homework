@@ -40,7 +40,7 @@ $ bin/connect-standalone.sh \
 - 后面参数为`connector`（`source`和`sink`）的配置文件，其中`connector.class`指明了该`connector`的类型。可以根据需要配置`source connect`或`sink connect`或同时包含二者。
 
 
-更多关于分布式`Kafka Connect`及自定义`Connector`，以后有需要再研究相关参考文档[[1](#1), [5](#5)]。
+更多关于分布式`Kafka Connect`及自定义`Connector`，以后有需要再研究相关参考文档[[1](#1), [5](#5), [6](#6)]。
 
 ## 2. 准备配置文件
 
@@ -168,7 +168,7 @@ $ cat test.sink.txt
 
 在试图使用`docker-compose`自动化上述流程时遇到问题：需要替换`wurstmeister/kafka`默认的启动命令`start-kafka.sh`，将其与`connect-standalone.sh`整合。
 
-后来参考[[6](#6)]发现正确的思路：将`Kafka`服务和`Kafaka Connect`看作独立的服务，分别在各自容器运行。这样既方便容器编排，逻辑上也更合理——一个负责消息队列，一个负责数据采集。
+后来参考[[7](#7)]发现正确的思路：将`Kafka`服务和`Kafaka Connect`看作独立的服务，分别在各自容器运行。这样既方便容器编排，逻辑上也更合理——一个负责消息队列，一个负责数据采集。
 
 于是，整合后的[`docker-compose.yml`](kafka_connect/docker-compose.yml)及相应[目录结构](./kafka_connect)：
 
@@ -237,4 +237,5 @@ exec "connect-standalone.sh" \
 - [[3] Kafka Connect](https://blog.csdn.net/helihongzhizhuo/article/details/80335931)<span id='3'></span>
 - [[4] kafka connect 简单测试](https://blog.csdn.net/helihongzhizhuo/article/details/80335931)<span id='4'></span>
 - [[5] Kafka connect介绍、部署及开发](https://my.oschina.net/hnrpf/blog/1555915)<span id='5'></span>
-- [[6] Kafka Connect - Crash Course](https://dev.to/thegroo/kafka-connect-crash-course-1chd)<span id='6'></span>
+- [[6] Kafka Connect Deep Dive – Converters and Serialization Explained](https://www.confluent.io/blog/kafka-connect-deep-dive-converters-serialization-explained/)<span id='6'></span>
+- [[7] Kafka Connect - Crash Course](https://dev.to/thegroo/kafka-connect-crash-course-1chd)<span id='7'></span>
