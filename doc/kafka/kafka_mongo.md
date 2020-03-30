@@ -76,10 +76,10 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
-    ports:
+    expose:
       - "9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.1.7
+      KAFKA_LISTENERS: PLAINTEXT://:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "connect-test:2:1"
     volumes:
@@ -143,7 +143,17 @@ plugin.path=/opt/kafka-plugins
 
 ### 3.2 `source connect`配置文件
 
-与[前文](kafka_connect.md)设置一致，借助自带的`FileStreamSource`监控文本文件`test.txt`。
+与[前文](kafka_connect.md)类似，不过这里去除`transformation`部分，即假设文件中已经是`json`格式的字符串。
+
+```bash
+name=local-file-source
+connector.class=FileStreamSource
+tasks.max=1
+file=/home/data/test.txt
+
+# topic
+topic=connect-test
+```
 
 ### 3.3 `sink connect`配置文件
 
@@ -182,9 +192,8 @@ $ docker-compose up -d
 写入测试数据
 
 ```bash
-$ echo 'hello world' > ./data/test.txt
-$ echo 'hello kafka' >> ./data/test.txt
-$ echo 'hello mongo-kafka connect' >> ./data/test.txt
+$ echo "{'x':100.3,'y':123.45,'date':'2020-03-30'}" > ./data/test.txt
+$ echo "{'x':-100.3,'y':-123.45,'date':'2020-03-30'}" >> ./data/test.txt
 ```
 
 连接`MongoDB`观察结果
@@ -192,14 +201,27 @@ $ echo 'hello mongo-kafka connect' >> ./data/test.txt
 ```json
 {
   "_id": {
-    "$oid": "5e808ecf7899395f4b702bda"
+    "$oid": "5e8166e2baf4814403eabbfc"
   },
-  "line": "hello mongo-kafka connect",
-  "data_source": "test-file-source"
+  "x": -100.3,
+  "y": -123.45,
+  "date": "2020-03-30"
 }
 ```
 
-关闭容器结束练习
+注意一旦输入的文本无法转换为`json`，例如
+
+```bash
+$ echo "hello world" >> data/test.txt
+```
+
+将导致`sink`任务失败并终止：
+
+```
+org.bson.json.JsonParseException: JSON reader was expecting a value but found 'hello'
+```
+
+最后，关闭容器结束练习
 
 ```bash
 $ docker-compose down
