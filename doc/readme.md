@@ -28,7 +28,7 @@
 
 ## Nginx
 
-- [ ] [安装与配置]()
+- [x] [安装与配置](nginx/quickstart.md)
 
 
 ## Flask
