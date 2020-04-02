@@ -29,6 +29,7 @@
 ## Nginx
 
 - [x] [安装与配置](nginx/quickstart.md)
+- [x] [负载均衡](nginx/load_balance.md)
 
 
 ## Flask

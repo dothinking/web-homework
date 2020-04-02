@@ -98,7 +98,7 @@ $ docker run --name nginx_test -d -p 8080:80 --rm nginx
 ```bash
 $ docker run --name nginx_test -d \
     -p 8080:80 \
-    -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf \
+    -v $PWD/conf/nginx-quickstart.conf:/etc/nginx/nginx.conf \
     -v $PWD/www:/usr/share/nginx/html \
     -v $PWD/logs:/var/log/nginx \
     --rm nginx
