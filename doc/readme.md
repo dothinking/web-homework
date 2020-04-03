@@ -34,4 +34,4 @@
 
 ## Flask
 
-- [x] [安装与配置]()
+- [x] [安装与配置](flask/quickstart.md)
