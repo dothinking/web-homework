@@ -35,3 +35,4 @@
 ## Flask
 
 - [x] [安装与配置](flask/quickstart.md)
+- [x] [部署flask应用](flask/deployment.md)
