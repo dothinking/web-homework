@@ -83,7 +83,7 @@ $ gunicorn myproject:app -c gunicorn.conf.py
 
 接下来`Nginx`作为`Gunicorn`服务器的反向代理，同时自身也作为托管静态文件的服务器。关于作为`Gunicorn`服务器的代理设置参考官方文档 [[3]](#3)。
 
-```json
+```
 server {
     listen 80;
 
@@ -149,7 +149,7 @@ networks:
 
 - `nginx`服务`nginx-proxy`依赖于`flask-hello-world`，故`nginx`反向代理配置的地址为`http://flask-hello-world:5000`。关键配置信息：
 
-```json
+```
 # static page
 location /static {
     root   /usr/share/nginx/html;
@@ -212,7 +212,7 @@ $ docker-compose up -d
 - `http://localhost:8080/` -> 代理到`gunicorn`服务器的`5000`端口 -> 匹配`flask`的`/`路由，显示`Hello Flask!`
 - `http://localhost:8080/admin` -> 代理到`gunicorn`服务器的`5000`端口 -> 匹配`flask`的`/admin/`路由，显示`Hello Flask Admin!`
 
-结束容器，完成本篇练习
+关闭容器，结束本篇练习
 
 ```bash
 $ docker-compose down

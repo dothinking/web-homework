@@ -18,7 +18,7 @@ load balance HTTP traffic to a group of servers
 
 首先用`upstream`定义一组服务器（例如`backend`），然后将请求发往这个组。
 
-```json
+```
 http {
     upstream backend {
         server backend1.example.com;
@@ -45,7 +45,7 @@ http {
 
 本文仅在单机上通过不同端口模拟练习，关键[配置信息]("./conf/nginx-loadbalance.conf")：
 
-```json
+```
 http {
     # load balancer
     server {
