@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>X Y Data Plot</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            body{
+                font-family: "Microsoft YaHei UI"; 
+                height: 100%; 
+            }
+            #main{
+                padding: 5px;
+                min-width: 1200px; 
+            }
+            #chart{
+                float: left;
+                width: 75%;
+                min-height: 650px;
+            }
+            #acquiring{
+                float: right;
+                width: 24%;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+                font-style: italic;
+                min-height: 650px;
+                background-color: #666666;
+            }
+        </style>
+        <script type="text/javascript" src="https://cdn.bootcss.com/echarts/4.7.0/echarts-en.min.js"></script>
+        <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="main">
+            <div id="chart"></div>
+            <div id="acquiring">&nbsp;Acquiring Area</div>
+        </div>
+        <script>
+            $(function () {
+                max_num = 100;
+
+                // init data
+                var init_value = {
+                    'value': [new Date().getTime(), 0]
+                };
+                var data = {
+                    'x': [init_value],
+                    'y': [init_value],
+                    'z': [init_value]
+                }
+
+                // update data
+                $("#acquiring").on('click', function(e){
+                    
+                    // current time
+                    var t = new Date().getTime();
+
+                    // relative (x,y) coordinates
+                    dx = (e.pageX-$(this).offset().left) / $(this).width();
+                    dy = (e.pageY-$(this).offset().top) / $(this).height();
+                    
+                    data.x.push({
+                        'value': [t, dx.toFixed(2)]
+                    });
+                    data.y.push({
+                        'value': [t, dy.toFixed(2)]
+                    });
+
+                    if(data.x.length>max_num){
+                        for (var i = data.x.length-max_num; i > 0; i--) {
+                            data.x.shift();
+                            data.y.shift();
+                        }
+                    }
+                })
+
+                // echarts options
+                option = {
+                    title: {
+                        text: 'Acquiring Relative (X,Y) Coordinates by Clicking Mouse in the Right Side Area',
+                        padding: [5, 0, 0, 30]
+                    },
+                    legend : {
+                        right: 0,
+                        data : ["X", "Y"]
+                    },
+                    grid:{
+                        x:'3.6%',
+                        y:'5%',
+                        x2:'2.4%',
+                        y2:'12%',
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            var date = new Date(params[0].value[0]);
+                            return date.toLocaleString() + '<br>X :' + params[0].value[1] + '<br>Y: ' + params[1].value[1];
+                        },
+                        axisPointer: {
+                            animation: false
+                        }
+                    },
+                    xAxis: {
+                        type: 'time',
+                        splitNumber: 10,
+                        splitLine: {
+                            show: true,
+                            lineStyle:{
+                                type:'dashed'
+                            }
+                        },
+                        axisLabel: {
+                            formatter: function(value, index) {
+                                return new Date(value).toLocaleString();
+                            }
+                        },
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: 0,
+                        max: 1,
+                        boundaryGap: [0, '100%'],
+                        splitLine: {
+                            show: true,
+                            lineStyle:{
+                                type:'dashed'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'X',
+                        type: 'line',
+                        showSymbol: false,
+                        hoverAnimation: false,
+                        data: data.x
+                    },{
+                        name: 'Y',
+                        type: 'line',
+                        showSymbol: false,
+                        hoverAnimation: false,
+                        data: data.y
+                    },{
+                        name: 'dummy',
+                        type: 'line',
+                        showSymbol: false,
+                        hoverAnimation: false,
+                        data: data.z,
+                        lineStyle: {
+                            width: 0
+                        }
+                    }],
+                    dataZoom: [
+                        {
+                            type: 'slider',
+                            start: 0,
+                            dataBackground:{
+                                lineStyle:{
+                                    color:'#95BC2F'
+                                },
+                                areaStyle:{
+                                    color:'#95BC2F',
+                                    opacity:1,
+                                }
+                            },
+                        },
+                        {
+                            type:'inside'
+                        }
+                    ]
+                };
+
+                // update echarts options
+                setInterval(function () {
+                    data.z = [{
+                        'value': [new Date().getTime(), 0]
+                    }];
+                    chart.setOption({
+                        series: [{
+                            data: data.x
+                        },{
+                            data: data.y
+                        },{
+                            data: data.z
+                        }]
+                    });
+                }, 1000);
+
+                // resize         
+                window.onresize = function () {
+                    chart.resize();
+                };
+
+                // create echarts
+                var chart = echarts.init(document.getElementById("chart"));
+                chart.setOption(option);
+            }());
+        </script>
+    </body>
+</html>
