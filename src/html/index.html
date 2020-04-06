@@ -54,29 +54,22 @@
                     'z': [init_value]
                 }
 
-                // update data
+                // acquire data
                 $("#acquiring").on('click', function(e){
-                    
-                    // current time
-                    var t = new Date().getTime();
-
                     // relative (x,y) coordinates
                     dx = (e.pageX-$(this).offset().left) / $(this).width();
                     dy = (e.pageY-$(this).offset().top) / $(this).height();
-                    
-                    data.x.push({
-                        'value': [t, dx.toFixed(2)]
+                    // save data
+                    $.ajax ({
+                        url: "api/save_coordinate",
+                        type: "POST",
+                        data: JSON.stringify({
+                            timestamp: new Date().getTime(),
+                            x: dx.toFixed(2),
+                            y: dy.toFixed(2)}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8"
                     });
-                    data.y.push({
-                        'value': [t, dy.toFixed(2)]
-                    });
-
-                    if(data.x.length>max_num){
-                        for (var i = data.x.length-max_num; i > 0; i--) {
-                            data.x.shift();
-                            data.y.shift();
-                        }
-                    }
                 })
 
                 // echarts options
@@ -98,6 +91,7 @@
                     tooltip: {
                         trigger: 'axis',
                         formatter: function (params) {
+                            if(params.length==1) return false;
                             var date = new Date(params[0].value[0]);
                             return date.toLocaleString() + '<br>X :' + params[0].value[1] + '<br>Y: ' + params[1].value[1];
                         },

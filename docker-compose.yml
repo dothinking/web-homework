@@ -10,6 +10,7 @@ services:
     volumes:
       - "./src/:/app/app/"
       - "./conf/gunicorn.conf.py:/app/conf/gunicorn.conf.py"
+      - "./data/:/app/data/" # save coordinates data
     expose: 
         - "5000"
     networks:
