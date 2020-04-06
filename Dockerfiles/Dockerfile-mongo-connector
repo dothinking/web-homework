@@ -1,0 +1,6 @@
+FROM wurstmeister/kafka:latest
+
+# download MongoDB Kafka Connector
+RUN wget https://search.maven.org/remotecontent?filepath=org/mongodb/kafka/mongo-kafka-connect/1.0.1/mongo-kafka-connect-1.0.1-all.jar \
+    && mkdir /opt/kafka-plugins \
+    && mv mongo-kafka-connect-1.0.1-all.jar /opt/kafka-plugins/

@@ -1,0 +1,19 @@
+FROM ubuntu-base
+
+# install java
+RUN apt install -qy --no-install-recommends default-jdk
+
+# download and unzip Flume
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/flume/1.9.0/apache-flume-1.9.0-bin.tar.gz && \
+  tar -xzf apache-flume-1.9.0-bin.tar.gz -C /opt && \
+  rm -f apache-flume-1.9.0-bin.tar.gz && \
+  mv /opt/apache-flume-1.9.0-bin /opt/flume
+
+# set environment variables
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH /opt/flume/bin:$PATH
+
+EXPOSE 44444
+EXPOSE 55555
+
+ENTRYPOINT ["/opt/flume/bin/flume-ng", "agent", "--conf", "/opt/flume/conf", "-conf-file", "/opt/flume/conf/usr/flume.conf", "--name", "a1"]

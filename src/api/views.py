@@ -1,12 +1,13 @@
 from flask import Blueprint, request, jsonify
 import logging
+import json
 
 api = Blueprint('api', __name__)
  
 @api.route('/save_coordinate/', methods=['POST'])
 def save_coordinate():
     json_data = request.get_json()
-    logging.log(100, json_data) # write coordinates with user defined logging level
+    logging.log(100, json.dumps(json_data)) # write coordinates with user defined logging level
     return jsonify({'errMsg': '0'})
     
 

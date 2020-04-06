@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   flask-app:
     image: flask-app:latest
     container_name: flask-app
@@ -9,7 +10,7 @@ services:
       dockerfile: Dockerfiles/Dockerfile-flask
     volumes:
       - "./src/:/app/app/"
-      - "./conf/gunicorn.conf.py:/app/conf/gunicorn.conf.py"
+      - "./conf/flask/gunicorn.conf.py:/app/conf/gunicorn.conf.py"
       - "./data/:/app/data/" # save coordinates data
     expose: 
         - "5000"
@@ -22,12 +23,106 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - "./conf/nginx.conf:/etc/nginx/nginx.conf"
+      - "./conf/nginx/nginx.conf:/etc/nginx/nginx.conf"
       - "./src/html/:/usr/share/nginx/html/"
     depends_on:
         - flask-app
     networks:
       - web-net
+
+  flume:
+    image: flume:1.9.0
+    container_name: flume
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile-flume
+    depends_on:
+      - nginx-proxy
+      - kafka-1
+      - kafka-2
+    volumes:
+      - "./conf/flume/flume.conf:/opt/flume/conf/usr/flume.conf"
+      - "./data/:/data/"
+    networks:
+      - web-net
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    expose:
+      - "2181"
+    networks:
+      - web-net
+
+  kafka-1:
+    image: wurstmeister/kafka
+    container_name: kafka-1
+    expose:
+      - "9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "topics_coordinates:2:2"
+    depends_on:
+      - zookeeper
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - web-net
+
+  kafka-2:
+    image: wurstmeister/kafka
+    container_name: kafka-2
+    ports:
+      - "9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181      
+    depends_on:
+      - zookeeper
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - web-net
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+        - "37017:27017"
+    volumes:
+        - "./conf/mongo/create_user.sh:/docker-entrypoint-initdb.d/create_user.sh"
+        - "data_db:/data/db"
+    networks:
+      - web-net
+
+  connect-kafka-mongo:
+    image: mongo-kafka-connector:1.0.1
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile-mongo-connector
+    container_name: connect-kafka-mongo
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - mongo
+    volumes:
+      - "./conf/mongo_connector/:/home/config/"
+      - "./conf/mongo_connector/start-kafka.sh:/usr/bin/start-kafka.sh"
+    networks:
+      - web-net
+
+
+# incompatible file system between windows and mongo,
+# so have to use volume:
+# docker volume [prefix]_data_db will be created automatically
+volumes: 
+    data_db:
 
 networks:
   web-net:
