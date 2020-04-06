@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
 import logging
 import json
+import pymongo
+import time
+
 
 api = Blueprint('api', __name__)
  
@@ -13,5 +16,25 @@ def save_coordinate():
 
 @api.route('/get_coordinates/')
 def get_coordinates():
-    return 'Hello get_coordinates!'
-    # return jsonify(json_data)
+    # connect to mongodb
+    uri = 'mongodb://tom:goodboy@mongo:27017/app_coordinates'
+    client = pymongo.MongoClient(uri)
+    collection = client.app_coordinates.data
+
+    # get latest 20 documents
+    cursor_obj = collection.find().sort('timestamp', -1).limit(100)
+    x, y = [], []
+    for obj in cursor_obj:
+        x.append({
+            'value': [obj.get('timestamp'), obj.get('x')]
+        })
+        y.append({
+            'value': [obj.get('timestamp'), obj.get('y')]
+        })
+
+    # prepare results
+    res = {
+        'x': x[::-1],
+        'y': y[::-1]
+    }
+    return jsonify(res)

@@ -14,6 +14,8 @@ services:
       - "./data/:/app/data/" # save coordinates data
     expose: 
         - "5000"
+    depends_on:
+      - mongo
     networks:
       - web-net
 
@@ -27,6 +29,21 @@ services:
       - "./src/html/:/usr/share/nginx/html/"
     depends_on:
         - flask-app
+    networks:
+      - web-net
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=admin
+        - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+        - "37017:27017"
+    volumes:
+        - "./conf/mongo/create_user.sh:/docker-entrypoint-initdb.d/create_user.sh"
+        - "data_db:/data/db"
+
     networks:
       - web-net
 
@@ -74,7 +91,7 @@ services:
   kafka-2:
     image: wurstmeister/kafka
     container_name: kafka-2
-    ports:
+    expose:
       - "9092"
     environment:
       KAFKA_BROKER_ID: 2
@@ -84,20 +101,6 @@ services:
       - zookeeper
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-    networks:
-      - web-net
-
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    environment:
-        - MONGO_INITDB_ROOT_USERNAME=admin
-        - MONGO_INITDB_ROOT_PASSWORD=root
-    ports:
-        - "37017:27017"
-    volumes:
-        - "./conf/mongo/create_user.sh:/docker-entrypoint-initdb.d/create_user.sh"
-        - "data_db:/data/db"
     networks:
       - web-net
 

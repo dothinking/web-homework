@@ -42,38 +42,9 @@
         </div>
         <script>
             $(function () {
-                max_num = 100;
-
-                // init data
-                var init_value = {
-                    'value': [new Date().getTime(), 0]
-                };
-                var data = {
-                    'x': [init_value],
-                    'y': [init_value],
-                    'z': [init_value]
-                }
-
-                // acquire data
-                $("#acquiring").on('click', function(e){
-                    // relative (x,y) coordinates
-                    dx = (e.pageX-$(this).offset().left) / $(this).width();
-                    dy = (e.pageY-$(this).offset().top) / $(this).height();
-                    // save data
-                    $.ajax ({
-                        url: "api/save_coordinate",
-                        type: "POST",
-                        data: JSON.stringify({
-                            timestamp: new Date().getTime(),
-                            x: dx.toFixed(2),
-                            y: dy.toFixed(2)}),
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8"
-                    });
-                })
-
-                // echarts options
-                option = {
+                // create echarts
+                var chart = echarts.init(document.getElementById("chart"));                
+                var option = {
                     title: {
                         text: 'Acquiring Relative (X,Y) Coordinates by Clicking Mouse in the Right Side Area',
                         padding: [5, 0, 0, 30]
@@ -131,19 +102,19 @@
                         type: 'line',
                         showSymbol: false,
                         hoverAnimation: false,
-                        data: data.x
+                        data: []
                     },{
                         name: 'Y',
                         type: 'line',
                         showSymbol: false,
                         hoverAnimation: false,
-                        data: data.y
+                        data: []
                     },{
                         name: 'dummy',
                         type: 'line',
                         showSymbol: false,
                         hoverAnimation: false,
-                        data: data.z,
+                        data: [],
                         lineStyle: {
                             width: 0
                         }
@@ -167,31 +138,50 @@
                         }
                     ]
                 };
-
-                // update echarts options
-                setInterval(function () {
-                    data.z = [{
-                        'value': [new Date().getTime(), 0]
-                    }];
-                    chart.setOption({
-                        series: [{
-                            data: data.x
-                        },{
-                            data: data.y
-                        },{
-                            data: data.z
-                        }]
+                chart.setOption(option);
+              
+                // acquire data
+                $("#acquiring").on('click', function(e){
+                    // relative (x,y) coordinates
+                    dx = (e.pageX-$(this).offset().left) / $(this).width();
+                    dy = (e.pageY-$(this).offset().top) / $(this).height();
+                    // save data
+                    $.ajax ({
+                        url: "api/save_coordinate",
+                        type: "POST",
+                        data: JSON.stringify({
+                            timestamp: new Date().getTime(),
+                            x: dx.toFixed(2),
+                            y: dy.toFixed(2)}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8"
                     });
+                })
+                
+                // update data
+                setInterval(function () {
+                    $.ajax ({
+                        url: "api/get_coordinates/",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        success: function(data){
+                            chart.setOption({
+                                series: [{
+                                    data: data.x
+                                },{
+                                    data: data.y
+                                },{
+                                    data: [{'value': [new Date().getTime(), 0]}]
+                                }]
+                            });
+                        }
+                    });                   
                 }, 1000);
 
                 // resize         
                 window.onresize = function () {
                     chart.resize();
                 };
-
-                // create echarts
-                var chart = echarts.init(document.getElementById("chart"));
-                chart.setOption(option);
             }());
         </script>
     </body>
