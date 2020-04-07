@@ -42,6 +42,14 @@
         </div>
         <script>
             $(function () {
+                // time format
+                function format_timestamp(timestamp){
+                    var d = new Date(timestamp);
+                    var ymd = [d.getFullYear(),d.getMonth()+1,d.getDate()].join('-')
+                    var hms = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':')
+                    return ymd + " " + hms;
+                }
+
                 // create echarts
                 var chart = echarts.init(document.getElementById("chart"));                
                 var option = {
@@ -62,9 +70,9 @@
                     tooltip: {
                         trigger: 'axis',
                         formatter: function (params) {
-                            if(params.length==1) return false;
-                            var date = new Date(params[0].value[0]);
-                            return date.toLocaleString() + '<br>X :' + params[0].value[1] + '<br>Y: ' + params[1].value[1];
+                            if(params.length==1) return null;
+                            var ts = params[0].value[0];
+                            return format_timestamp(ts) + '<br>X :' + params[0].value[1] + '<br>Y: ' + params[1].value[1];
                         },
                         axisPointer: {
                             animation: false
@@ -81,7 +89,7 @@
                         },
                         axisLabel: {
                             formatter: function(value, index) {
-                                return new Date(value).toLocaleString();
+                                return format_timestamp(value);
                             }
                         },
                     },
@@ -171,12 +179,12 @@
                                 },{
                                     data: data.y
                                 },{
-                                    data: [{'value': [new Date().getTime(), 0]}]
+                                    data: data.z
                                 }]
                             });
                         }
                     });                   
-                }, 3000);
+                }, 1000);
 
                 // resize         
                 window.onresize = function () {

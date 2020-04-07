@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import logging
 import json
+import time
 from .models import db
 
 
@@ -15,9 +16,11 @@ def save_coordinate():
 
 @api.route('/get_coordinates/')
 def get_coordinates():
-    # get latest 20 documents
+    # get documents within latest 1 min
+    now = time.time()*1000
+    past = now - 1 * 60 * 1000    
     x, y = [], []
-    cursor_obj = db.data.find().sort('timestamp', -1).limit(100)
+    cursor_obj = db.data.find({ "timestamp" : { "$gte" : past, "$lt" : now } }).sort('timestamp')
     for obj in cursor_obj:
         x.append({
             'value': [obj.get('timestamp'), obj.get('x')]
@@ -28,6 +31,7 @@ def get_coordinates():
 
     # prepare results
     return jsonify({
-        'x': x[::-1],
-        'y': y[::-1]
+        'x': x,
+        'y': y,
+        'z': [{'value': [past, 0]}, {'value': [now, 0]}] # dummy series
     })
