@@ -11,6 +11,8 @@
 
 flask -> text file -> flume -> kafka -> mongodb -> flask
 
+![loadmap](./doc/loadmap.png)
+
 
 ## 分解练习
 
@@ -24,8 +26,8 @@ $ docker-compose up -d
 
 ## 提高方向
 
-[ ] 配置文件之间配置项的自动同步， *例如`kafka`主题名同时在`flume`、`kafka_mongo_connector`配置文件，及`docker-compose`出现*。
+- [ ] 配置文件之间配置项的自动同步， *例如`kafka`主题名同时在`flume`、`kafka_mongo_connector`配置文件，及`docker-compose`出现*。
 
-[ ] 练习集群方式部署项目
+- [ ] 练习集群方式部署项目
 
 
