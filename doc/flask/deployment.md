@@ -106,6 +106,12 @@ server {
 
 此时可在浏览器中访问`127.0.0.1:80`，即通过`nginx`反向代理到`127.0.0.1:5000`。
 
+**注意**
+
+`nginx`中路径模式必须与`flask`路由匹配，例如上例中`location /`如果改为`location /api`表示所有以`api`开头的URL，则`flask`路由相应改为`@app.route('/api/')`及`@app.route('/api/admin/')`。
+
+
+
 ## 4. Dockerize
 
 接下来使用`docker-compose`编排容器来组合以上过程，文档[[4]](#4)供参考。
